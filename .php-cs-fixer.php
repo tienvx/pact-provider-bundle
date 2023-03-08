@@ -10,6 +10,7 @@ $config = new PhpCsFixer\Config();
 return $config
     ->setRules([
         '@PSR12' => true,
+        '@Symfony' => true,
     ])
     ->setUsingCache(false)
     ->setFinder($finder)

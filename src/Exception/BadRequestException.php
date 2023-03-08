@@ -2,8 +2,8 @@
 
 namespace Tienvx\Bundle\PactProviderBundle\Exception;
 
-use Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException as BaseBadRequestException;
 
-class BadRequestException extends \UnexpectedValueException implements RequestExceptionInterface
+class BadRequestException extends BaseBadRequestException
 {
 }
