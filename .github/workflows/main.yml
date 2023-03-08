@@ -1,0 +1,47 @@
+name: main
+
+on: [push, pull_request]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['8.0', '8.1', '8.2']
+        dependency-versions: ['lowest', 'highest']
+    name: PHP ${{ matrix.php-versions }} with ${{ matrix.dependency-versions }} versions of Composer dependencies
+    steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        tools: phpstan, phpcs, php-cs-fixer:3
+        coverage: pcov
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install
+      uses: "ramsey/composer-install@v2"
+      with:
+        dependency-versions: ${{ matrix.dependency-versions }}
+
+    - name: Run PHP CS
+      run: phpcs --standard=PSR12 src tests
+
+    - name: Run PHP CS Fixer
+      run: php-cs-fixer fix --diff --dry-run
+
+    - name: Run PHPStan
+      run: phpstan analyse src tests
+
+    - name: Test & Generate Code Coverage
+      run: ./vendor/bin/phpunit
+
+    - name: Upload coverage results to Coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        composer global require php-coveralls/php-coveralls
+        php-coveralls --coverage_clover=clover.xml -v
+      if: matrix.php-versions == '8.0'
