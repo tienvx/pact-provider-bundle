@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Tienvx\Bundle\PactProviderBundle\Exception\BadMethodCallException;
 use Tienvx\Bundle\PactProviderBundle\Exception\BadRequestException;
+use Tienvx\Bundle\PactProviderBundle\Exception\NoHandlerForStateException;
 
 class StateChangeRequestListener
 {
@@ -34,6 +35,9 @@ class StateChangeRequestListener
             $action = $request->get('action', self::SETUP_ACTION);
             if (!in_array($action, [self::SETUP_ACTION, self::TEARDOWN_ACTION])) {
                 throw new BadRequestException(sprintf("Action '%s' is not supported in state change request.", $action));
+            }
+            if (!$this->locator->has($state)) {
+                throw new NoHandlerForStateException(sprintf("No handler for state '%s'.", $state));
             }
             $handler = $this->locator->get($state);
             $method = [$handler, self::METHODS[$action]];
