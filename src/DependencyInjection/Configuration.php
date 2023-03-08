@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('state_change')
                     ->children()
-                        ->scalarNode('url')->defaultValue('/state-change')->end()
+                        ->scalarNode('url')->defaultValue('/change-state')->end()
                     ->end()
                 ->end()
             ->end()
