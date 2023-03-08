@@ -21,7 +21,7 @@ class TienvxPactProviderExtensionTest extends TestCase
     public function testLoad(): void
     {
         $this->loader->load([
-            ['state_change' => ['url' => '/path/to/state/change']]
+            ['state_change' => ['url' => '/path/to/state/change']],
         ], $this->container);
         $this->assertTrue($this->container->has(StateChangeRequestListener::class));
         $this->assertTrue(

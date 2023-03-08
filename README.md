@@ -15,14 +15,18 @@ composer require tienvx/pact-provider-bundle
 ## Documentation
 
 ```php
-use Tienvx\Bundle\AssignmentsEvaluatorBundle\Validator\AssignmentsSyntax;
+use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateChangeHandler;
 
-class Business
+#[AsStateChangeHandler(state: 'Given A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists')]
+class StateChangeHandler
 {
-    /**
-     * @AssignmentsSyntax
-     */
-    protected string $expression;
+    protected function setUp(array $params): void
+    {
+    }
+
+    protected function tearDown(array $params): void
+    {
+    }
 }
 ```
 
