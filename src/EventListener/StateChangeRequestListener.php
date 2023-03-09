@@ -6,18 +6,16 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Tienvx\Bundle\PactProviderBundle\Exception\BadMethodCallException;
 use Tienvx\Bundle\PactProviderBundle\Exception\BadRequestException;
+use Tienvx\Bundle\PactProviderBundle\Exception\LogicException;
 use Tienvx\Bundle\PactProviderBundle\Exception\NoHandlerForStateException;
+use Tienvx\Bundle\PactProviderBundle\Handler\SetUpInterface;
+use Tienvx\Bundle\PactProviderBundle\Handler\TearDownInterface;
 
 class StateChangeRequestListener
 {
     public const SETUP_ACTION = 'setup';
     public const TEARDOWN_ACTION = 'teardown';
-    public const METHODS = [
-        self::SETUP_ACTION => 'setUp',
-        self::TEARDOWN_ACTION => 'tearDown',
-    ];
 
     public function __construct(
         private ServiceLocator $locator,
@@ -29,27 +27,39 @@ class StateChangeRequestListener
     public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if ($request->getPathInfo() === $this->url) {
+        if ($request->getPathInfo() === $this->url && Request::METHOD_GET === $request->getMethod()) {
             [$state, $action, $params] = $this->getParameters($request);
 
-            call_user_func($this->getHandlerMethod($state, $action), $params);
+            $this->callHandler($state, $action, $params);
 
             $event->setResponse(new Response('', Response::HTTP_NO_CONTENT));
         }
     }
 
-    private function getHandlerMethod(string $state, string $action): callable
+    private function callHandler(string $state, string $action, array $params): void
     {
         if (!$this->locator->has($state)) {
             throw new NoHandlerForStateException(sprintf("No handler for state '%s'.", $state));
         }
         $handler = $this->locator->get($state);
-        $method = [$handler, self::METHODS[$action]];
-        if (!is_callable($method)) {
-            throw new BadMethodCallException(sprintf("Method '%s' does not exist in '%s'.", $method[1], get_class($method[0])));
-        }
+        switch ($action) {
+            case self::SETUP_ACTION:
+                if (!$handler instanceof SetUpInterface) {
+                    throw new LogicException(sprintf('Handler "%s" must implement "%s".', get_debug_type($handler), SetUpInterface::class));
+                }
+                $handler->setUp($params);
+                break;
 
-        return $method;
+            case self::TEARDOWN_ACTION:
+                if (!$handler instanceof TearDownInterface) {
+                    throw new LogicException(sprintf('Handler "%s" must implement "%s".', get_debug_type($handler), TearDownInterface::class));
+                }
+                $handler->tearDown($params);
+                break;
+
+            default:
+                break;
+        }
     }
 
     private function getParameters(Request $request): array
