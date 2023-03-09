@@ -12,6 +12,7 @@ return static function (ContainerConfigurator $container): void {
                 '',
                 true,
             ])
-            ->tag('kernel.event_listener')
+            // Before Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest
+            ->tag('kernel.event_listener', ['priority' => 33])
     ;
 };

@@ -26,8 +26,11 @@ class StateChangeRequestListener
 
     public function __invoke(RequestEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
         $request = $event->getRequest();
-        if ($request->getPathInfo() === $this->url && Request::METHOD_GET === $request->getMethod()) {
+        if ($request->getPathInfo() === $this->url && ($this->body ? Request::METHOD_POST : Request::METHOD_GET) === $request->getMethod()) {
             [$state, $action, $params] = $this->getParameters($request);
 
             $this->callHandler($state, $action, $params);
