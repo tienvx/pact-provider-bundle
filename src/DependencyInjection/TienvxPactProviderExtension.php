@@ -30,5 +30,6 @@ class TienvxPactProviderExtension extends Extension
 
         $definition = $container->getDefinition(StateChangeRequestListener::class);
         $definition->replaceArgument(1, $config['state_change']['url']);
+        $definition->replaceArgument(2, $config['state_change']['body']);
     }
 }
