@@ -2,6 +2,6 @@
 
 namespace Tienvx\Bundle\PactProviderBundle\Exception;
 
-class BadMethodCallException extends \BadMethodCallException
+class LogicException extends \LogicException
 {
 }
