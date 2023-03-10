@@ -15,16 +15,32 @@ composer require tienvx/pact-provider-bundle
 ## Documentation
 
 ```php
-use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateChangeHandler;
+use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateHandler;
+use Tienvx\Bundle\PactProviderBundle\StateHandler\SetUpInterface;
+use Tienvx\Bundle\PactProviderBundle\StateHandler\TearDownInterface;
 
-#[AsStateChangeHandler(state: 'Given A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists')]
-class StateChangeHandler
+#[AsStateHandler(state: 'Given A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists')]
+class StateChangeHandler implements SetUpInterface, TearDownInterface
 {
-    protected function setUp(array $params): void
+    public function setUp(array $params): void
     {
     }
 
-    protected function tearDown(array $params): void
+    public function tearDown(array $params): void
+    {
+    }
+}
+```
+
+```php
+use Tienvx\Bundle\PactProviderBundle\Attribute\AsMessageDispatcher;
+use Tienvx\Bundle\PactProviderBundle\Model\Message;
+use Tienvx\Bundle\PactProviderBundle\MessageDispatcher\DispatcherInterface;
+
+#[AsMessageDispatcher(description: 'an alligator named Mary exists')]
+class MessageDispatcher implements DispatcherInterface
+{
+    public function dispatch(): Message
     {
     }
 }
