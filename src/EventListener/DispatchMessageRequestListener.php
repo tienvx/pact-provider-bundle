@@ -30,11 +30,7 @@ class DispatchMessageRequestListener
             [$description, $providerStates] = $this->getParameters($request);
 
             $this->handle($providerStates, Action::SETUP);
-            $message = $this->messageDispatcherManager->dispatch($description);
-            $event->setResponse(new Response($message->contents, Response::HTTP_OK, [
-                'Content-Type' => $message->contentType,
-                'pact_message_metadata' => \base64_encode($message->metadata),
-            ]));
+            $event->setResponse($this->getReponse($description));
             $this->handle($providerStates, Action::TEARDOWN);
         }
     }
@@ -67,5 +63,15 @@ class DispatchMessageRequestListener
             }
             $this->stateHandlerManager->handle($providerState['name'], $action, $params);
         }
+    }
+
+    private function getReponse(string $description): Response
+    {
+        $message = $this->messageDispatcherManager->dispatch($description);
+
+        return new Response($message->contents, Response::HTTP_OK, [
+            'Content-Type' => $message->contentType,
+            'pact_message_metadata' => \base64_encode($message->metadata),
+        ]);
     }
 }
