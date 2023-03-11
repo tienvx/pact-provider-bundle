@@ -45,18 +45,20 @@ class TienvxPactProviderExtensionTest extends TestCase
             ],
             StateChangeRequestListener::class => [
                 'tag' => 'kernel.event_listener',
-                'args' => fn (array $args) => $args === [
-                    StateHandlerManagerInterface::class,
-                    '/path/to/state/change',
-                    false,
-                ],
+                'args' => function (array $args): bool {
+                    return 3 === count($args) &&
+                        StateHandlerManagerInterface::class == $args[0] &&
+                        '/path/to/state/change' === $args[1] &&
+                        false === $args[2];
+                },
             ],
             DispatchMessageRequestListener::class => [
                 'tag' => 'kernel.event_listener',
-                'args' => fn (array $args) => $args === [
-                    StateHandlerManagerInterface::class,
-                    MessageDispatcherManagerInterface::class,
-                ],
+                'args' => function (array $args): bool {
+                    return 2 === count($args) &&
+                        StateHandlerManagerInterface::class == $args[0] &&
+                        MessageDispatcherManagerInterface::class == $args[1];
+                },
             ],
         ];
         foreach ($services as $key => $value) {
