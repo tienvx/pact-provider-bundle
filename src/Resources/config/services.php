@@ -10,6 +10,7 @@ use Tienvx\Bundle\PactProviderBundle\Service\StateHandlerManager;
 use Tienvx\Bundle\PactProviderBundle\Service\StateHandlerManagerInterface;
 
 return static function (ContainerConfigurator $container): void {
+    $service = function_exists('service') ? 'service' : 'ref';
     $container->services()
         ->set(StateHandlerManager::class)
             ->args([
@@ -25,7 +26,7 @@ return static function (ContainerConfigurator $container): void {
 
         ->set(StateChangeRequestListener::class)
             ->args([
-                service(StateHandlerManagerInterface::class),
+                $service(StateHandlerManagerInterface::class),
                 '',
                 true,
             ])
@@ -33,8 +34,8 @@ return static function (ContainerConfigurator $container): void {
             ->tag('kernel.event_listener', ['priority' => 33])
         ->set(DispatchMessageRequestListener::class)
             ->args([
-                service(StateHandlerManagerInterface::class),
-                service(MessageDispatcherManagerInterface::class),
+                $service(StateHandlerManagerInterface::class),
+                $service(MessageDispatcherManagerInterface::class),
             ])
             // Before Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest
             ->tag('kernel.event_listener', ['priority' => 33])
