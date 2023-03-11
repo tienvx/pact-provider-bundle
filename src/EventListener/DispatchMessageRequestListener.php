@@ -72,7 +72,7 @@ class DispatchMessageRequestListener
         if ($message) {
             $event->setResponse(new Response($message->contents, Response::HTTP_OK, [
                 'Content-Type' => $message->contentType,
-                'pact_message_metadata' => \base64_encode($message->metadata),
+                'Pact-Message-Metadata' => \base64_encode($message->metadata),
             ]));
         }
     }
