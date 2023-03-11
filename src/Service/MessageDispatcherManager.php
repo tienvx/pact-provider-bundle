@@ -5,6 +5,7 @@ namespace Tienvx\Bundle\PactProviderBundle\Service;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Tienvx\Bundle\PactProviderBundle\Exception\LogicException;
 use Tienvx\Bundle\PactProviderBundle\Exception\NoDispatcherForMessageException;
+use Tienvx\Bundle\PactProviderBundle\MessageDispatcher\DispatcherInterface;
 use Tienvx\Bundle\PactProviderBundle\Model\Message;
 
 class MessageDispatcherManager implements MessageDispatcherManagerInterface
