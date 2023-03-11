@@ -6,5 +6,5 @@ use Tienvx\Bundle\PactProviderBundle\Model\Message;
 
 interface DispatcherInterface
 {
-    public function dispatch(): Message;
+    public function dispatch(): ?Message;
 }
