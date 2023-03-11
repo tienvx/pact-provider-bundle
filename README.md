@@ -14,20 +14,66 @@ composer require tienvx/pact-provider-bundle
 
 ## Documentation
 
-```php
-use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateChangeHandler;
+### Register State Handler
 
-#[AsStateChangeHandler(state: 'Given A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists')]
-class StateChangeHandler
+```php
+
+namespace App\StateHandler;
+
+use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateHandler;
+use Tienvx\Bundle\PactProviderBundle\StateHandler\SetUpInterface;
+use Tienvx\Bundle\PactProviderBundle\StateHandler\TearDownInterface;
+
+#[AsStateHandler(state: 'A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists')]
+class UserHandler implements SetUpInterface, TearDownInterface
 {
-    protected function setUp(array $params): void
+    public function setUp(array $params): void
     {
     }
 
-    protected function tearDown(array $params): void
+    public function tearDown(array $params): void
     {
     }
 }
+```
+
+For Symfony 4.4 only:
+
+```yaml
+# config/services.yaml
+services:
+    App\StateHandler\UserHandler:
+        tags:
+            - { name: 'pact_provider.state_handler', state: 'A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists' }
+```
+
+### Register Message Dispatcher
+
+```php
+
+namespace App\MessageDispatcher;
+
+use Tienvx\Bundle\PactProviderBundle\Attribute\AsMessageDispatcher;
+use Tienvx\Bundle\PactProviderBundle\Model\Message;
+use Tienvx\Bundle\PactProviderBundle\MessageDispatcher\DispatcherInterface;
+
+#[AsMessageDispatcher(description: 'User created message')]
+class UserDispatcher implements DispatcherInterface
+{
+    public function dispatch(): Message
+    {
+    }
+}
+```
+
+For Symfony 4.4 only:
+
+```yaml
+# config/services.yaml
+services:
+    App\MessageDispatcher\UserDispatcher:
+        tags:
+            - { name: 'pact_provider.message_dispatcher', description: 'User created message' }
 ```
 
 ## License

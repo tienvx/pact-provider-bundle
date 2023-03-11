@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.0', '8.1']
+        php-versions: ['8.0', '8.1', '8.2']
         dependency-versions: ['lowest', 'highest']
     name: PHP ${{ matrix.php-versions }} with ${{ matrix.dependency-versions }} versions of Composer dependencies
     steps:
@@ -28,6 +28,8 @@ jobs:
 
     - name: Run PHP CS Fixer
       run: php-cs-fixer fix --diff --dry-run
+      env:
+        PHP_CS_FIXER_IGNORE_ENV: 1
 
     - name: Run PHPStan
       run: phpstan analyse src tests

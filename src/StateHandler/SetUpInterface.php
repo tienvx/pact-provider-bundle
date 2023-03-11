@@ -1,6 +1,6 @@
 <?php
 
-namespace Tienvx\Bundle\PactProviderBundle\Handler;
+namespace Tienvx\Bundle\PactProviderBundle\StateHandler;
 
 interface SetUpInterface
 {

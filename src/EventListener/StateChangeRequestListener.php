@@ -2,23 +2,17 @@
 
 namespace Tienvx\Bundle\PactProviderBundle\EventListener;
 
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Tienvx\Bundle\PactProviderBundle\Enum\Action;
 use Tienvx\Bundle\PactProviderBundle\Exception\BadRequestException;
-use Tienvx\Bundle\PactProviderBundle\Exception\LogicException;
-use Tienvx\Bundle\PactProviderBundle\Exception\NoHandlerForStateException;
-use Tienvx\Bundle\PactProviderBundle\Handler\SetUpInterface;
-use Tienvx\Bundle\PactProviderBundle\Handler\TearDownInterface;
+use Tienvx\Bundle\PactProviderBundle\Service\StateHandlerManagerInterface;
 
 class StateChangeRequestListener
 {
-    public const SETUP_ACTION = 'setup';
-    public const TEARDOWN_ACTION = 'teardown';
-
     public function __construct(
-        private ServiceLocator $locator,
+        private StateHandlerManagerInterface $stateHandlerManager,
         private string $url,
         private bool $body
     ) {
@@ -33,35 +27,9 @@ class StateChangeRequestListener
         if ($request->getPathInfo() === $this->url && Request::METHOD_POST === $request->getMethod()) {
             [$state, $action, $params] = $this->getParameters($request);
 
-            $this->callHandler($state, $action, $params);
+            $this->stateHandlerManager->handle($state, $action, $params);
 
             $event->setResponse(new Response('', Response::HTTP_NO_CONTENT));
-        }
-    }
-
-    private function callHandler(string $state, string $action, array $params): void
-    {
-        if (!$this->locator->has($state)) {
-            throw new NoHandlerForStateException(sprintf("No handler for state '%s'.", $state));
-        }
-        $handler = $this->locator->get($state);
-        switch ($action) {
-            case self::SETUP_ACTION:
-                if (!$handler instanceof SetUpInterface) {
-                    throw new LogicException(sprintf('Handler "%s" must implement "%s".', get_debug_type($handler), SetUpInterface::class));
-                }
-                $handler->setUp($params);
-                break;
-
-            case self::TEARDOWN_ACTION:
-                if (!$handler instanceof TearDownInterface) {
-                    throw new LogicException(sprintf('Handler "%s" must implement "%s".', get_debug_type($handler), TearDownInterface::class));
-                }
-                $handler->tearDown($params);
-                break;
-
-            default:
-                break;
         }
     }
 
@@ -86,7 +54,7 @@ class StateChangeRequestListener
         if (!is_string($state)) {
             throw new BadRequestException("'state' is missing or invalid in state change request.");
         }
-        if (!is_string($action) || !in_array($action, [self::SETUP_ACTION, self::TEARDOWN_ACTION])) {
+        if (!is_string($action) || !in_array($action, Action::all())) {
             throw new BadRequestException("'action' is missing or invalid in state change request.");
         }
         if (!is_array($params)) {

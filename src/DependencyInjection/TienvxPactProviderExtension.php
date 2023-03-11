@@ -7,7 +7,8 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateChangeHandler;
+use Tienvx\Bundle\PactProviderBundle\Attribute\AsMessageDispatcher;
+use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateHandler;
 use Tienvx\Bundle\PactProviderBundle\EventListener\StateChangeRequestListener;
 
 class TienvxPactProviderExtension extends Extension
@@ -17,13 +18,23 @@ class TienvxPactProviderExtension extends Extension
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.php');
 
-        $container->registerAttributeForAutoconfiguration(
-            AsStateChangeHandler::class,
-            static function (ChildDefinition $definition, AsStateChangeHandler $attribute, \ReflectionClass $reflector): void {
-                $tagAttributes = get_object_vars($attribute);
-                $definition->addTag('pact_provider.state_change_handler', $tagAttributes);
-            }
-        );
+        if (method_exists($container, 'registerAttributeForAutoconfiguration')) {
+            $container->registerAttributeForAutoconfiguration(
+                AsStateHandler::class,
+                static function (ChildDefinition $definition, AsStateHandler $attribute, \ReflectionClass $reflector): void {
+                    $tagAttributes = get_object_vars($attribute);
+                    $definition->addTag('pact_provider.state_handler', $tagAttributes);
+                }
+            );
+
+            $container->registerAttributeForAutoconfiguration(
+                AsMessageDispatcher::class,
+                static function (ChildDefinition $definition, AsMessageDispatcher $attribute, \ReflectionClass $reflector): void {
+                    $tagAttributes = get_object_vars($attribute);
+                    $definition->addTag('pact_provider.message_dispatcher', $tagAttributes);
+                }
+            );
+        }
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
