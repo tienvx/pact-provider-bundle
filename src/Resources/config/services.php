@@ -25,7 +25,7 @@ return static function (ContainerConfigurator $container): void {
 
         ->set(StateChangeRequestListener::class)
             ->args([
-                StateHandlerManagerInterface::class,
+                service(StateHandlerManagerInterface::class),
                 '',
                 true,
             ])
@@ -33,8 +33,8 @@ return static function (ContainerConfigurator $container): void {
             ->tag('kernel.event_listener', ['priority' => 33])
         ->set(DispatchMessageRequestListener::class)
             ->args([
-                StateHandlerManagerInterface::class,
-                MessageDispatcherManagerInterface::class,
+                service(StateHandlerManagerInterface::class),
+                service(MessageDispatcherManagerInterface::class),
             ])
             // Before Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest
             ->tag('kernel.event_listener', ['priority' => 33])
