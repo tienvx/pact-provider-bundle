@@ -3,9 +3,14 @@
 namespace Tienvx\Bundle\MbtBundle\Tests\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Tienvx\Bundle\PactProviderBundle\DependencyInjection\TienvxPactProviderExtension;
+use Tienvx\Bundle\PactProviderBundle\EventListener\DispatchMessageRequestListener;
 use Tienvx\Bundle\PactProviderBundle\EventListener\StateChangeRequestListener;
+use Tienvx\Bundle\PactProviderBundle\Service\MessageDispatcherManager;
+use Tienvx\Bundle\PactProviderBundle\Service\MessageDispatcherManagerInterface;
+use Tienvx\Bundle\PactProviderBundle\Service\StateHandlerManager;
 use Tienvx\Bundle\PactProviderBundle\Service\StateHandlerManagerInterface;
 
 class TienvxPactProviderExtensionTest extends TestCase
@@ -29,20 +34,41 @@ class TienvxPactProviderExtensionTest extends TestCase
                 ],
             ],
         ], $this->container);
-        $this->assertTrue($this->container->has(StateChangeRequestListener::class));
-        $definition = $this->container->getDefinition(StateChangeRequestListener::class);
-        $this->assertTrue($definition->hasTag('kernel.event_listener'));
-        $this->assertSame(
-            StateHandlerManagerInterface::class,
-            $definition->getArgument(0)
-        );
-        $this->assertSame(
-            '/path/to/state/change',
-            $definition->getArgument(1)
-        );
-        $this->assertSame(
-            false,
-            $definition->getArgument(2)
-        );
+        $services = [
+            StateHandlerManager::class => [
+                'alias' => StateHandlerManagerInterface::class,
+                'args' => fn (array $args) => 1 === count($args) && $args[0] instanceof ServiceLocatorArgument,
+            ],
+            MessageDispatcherManager::class => [
+                'alias' => MessageDispatcherManagerInterface::class,
+                'args' => fn (array $args) => 1 === count($args) && $args[0] instanceof ServiceLocatorArgument,
+            ],
+            StateChangeRequestListener::class => [
+                'tag' => 'kernel.event_listener',
+                'args' => fn (array $args) => $args === [
+                    StateHandlerManagerInterface::class,
+                    '/path/to/state/change',
+                    false,
+                ],
+            ],
+            DispatchMessageRequestListener::class => [
+                'tag' => 'kernel.event_listener',
+                'args' => fn (array $args) => $args === [
+                    StateHandlerManagerInterface::class,
+                    MessageDispatcherManagerInterface::class,
+                ],
+            ],
+        ];
+        foreach ($services as $key => $value) {
+            $this->assertTrue($this->container->has($key));
+            $definition = $this->container->getDefinition($key);
+            if (isset($value['tag'])) {
+                $this->assertTrue($definition->hasTag($value['tag']));
+            }
+            $this->assertTrue($value['args']($definition->getArguments()));
+            if (isset($value['alias'])) {
+                $this->assertEquals($key, $this->container->getAlias($value['alias']));
+            }
+        }
     }
 }

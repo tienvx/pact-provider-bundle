@@ -14,13 +14,18 @@ composer require tienvx/pact-provider-bundle
 
 ## Documentation
 
+### Register State Handler
+
 ```php
+
+namespace App\StateHandler;
+
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateHandler;
 use Tienvx\Bundle\PactProviderBundle\StateHandler\SetUpInterface;
 use Tienvx\Bundle\PactProviderBundle\StateHandler\TearDownInterface;
 
-#[AsStateHandler(state: 'Given A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists')]
-class StateChangeHandler implements SetUpInterface, TearDownInterface
+#[AsStateHandler(state: 'A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists')]
+class UserHandler implements SetUpInterface, TearDownInterface
 {
     public function setUp(array $params): void
     {
@@ -32,18 +37,43 @@ class StateChangeHandler implements SetUpInterface, TearDownInterface
 }
 ```
 
+For Symfony 4.4 only:
+
+```yaml
+# config/services.yaml
+services:
+    App\StateHandler\UserHandler:
+        tags:
+            - { name: 'pact_provider.state_handler', state: 'A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists' }
+```
+
+### Register Message Dispatcher
+
 ```php
+
+namespace App\MessageDispatcher;
+
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsMessageDispatcher;
 use Tienvx\Bundle\PactProviderBundle\Model\Message;
 use Tienvx\Bundle\PactProviderBundle\MessageDispatcher\DispatcherInterface;
 
-#[AsMessageDispatcher(description: 'an alligator named Mary exists')]
-class MessageDispatcher implements DispatcherInterface
+#[AsMessageDispatcher(description: 'User created message')]
+class UserDispatcher implements DispatcherInterface
 {
     public function dispatch(): Message
     {
     }
 }
+```
+
+For Symfony 4.4 only:
+
+```yaml
+# config/services.yaml
+services:
+    App\MessageDispatcher\UserDispatcher:
+        tags:
+            - { name: 'pact_provider.message_dispatcher', description: 'User created message' }
 ```
 
 ## License
