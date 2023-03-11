@@ -14,7 +14,7 @@ class MessageDispatcherManager implements MessageDispatcherManagerInterface
     {
     }
 
-    public function dispatch(string $description): Message
+    public function dispatch(string $description): ?Message
     {
         if (!$this->locator->has($description)) {
             throw new NoDispatcherForMessageException(sprintf("No dispatcher for description '%s'.", $description));
