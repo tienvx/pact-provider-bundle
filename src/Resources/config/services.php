@@ -10,7 +10,8 @@ use Tienvx\Bundle\PactProviderBundle\Service\StateHandlerManager;
 use Tienvx\Bundle\PactProviderBundle\Service\StateHandlerManagerInterface;
 
 return static function (ContainerConfigurator $container): void {
-    $service = function_exists('service') ? 'service' : 'ref';
+    $namespace = __NAMESPACE__;
+    $service = function_exists("$namespace\\service") ? "$namespace\\service" : "$namespace\\ref";
     $container->services()
         ->set(StateHandlerManager::class)
             ->args([
