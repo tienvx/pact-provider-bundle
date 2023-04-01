@@ -74,6 +74,7 @@ class DispatchMessageRequestListener
                 'Content-Type' => $message->contentType,
                 'Pact-Message-Metadata' => \base64_encode($message->metadata),
             ]));
+            $event->stopPropagation();
         }
     }
 }
