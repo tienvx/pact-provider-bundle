@@ -32,7 +32,7 @@ jobs:
         PHP_CS_FIXER_IGNORE_ENV: 1
 
     - name: Run PHPStan
-      run: phpstan analyse src tests
+      run: phpstan
 
     - name: Test & Generate Code Coverage
       run: ./vendor/bin/phpunit
