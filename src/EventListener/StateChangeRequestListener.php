@@ -30,7 +30,6 @@ class StateChangeRequestListener
             $this->stateHandlerManager->handle($state, $action, $params);
 
             $event->setResponse(new Response('', Response::HTTP_NO_CONTENT));
-            $event->stopPropagation();
         }
     }
 
