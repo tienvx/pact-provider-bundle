@@ -61,7 +61,7 @@ class DispatchMessageRequestListener
             if (!is_array($params)) {
                 throw new BadRequestException(sprintf("Invalid 'params' for provider state '%s'.", $name));
             }
-            $this->stateHandlerManager->handle($providerState['name'], $action, $params);
+            $this->stateHandlerManager->handle($name, $action, $params);
         }
     }
 
