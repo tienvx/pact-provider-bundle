@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use Tienvx\Bundle\PactProviderBundle\Enum\Action;
 use Tienvx\Bundle\PactProviderBundle\Exception\LogicException;
 use Tienvx\Bundle\PactProviderBundle\Exception\NoHandlerForStateException;
+use Tienvx\Bundle\PactProviderBundle\Model\StateValues;
 use Tienvx\Bundle\PactProviderBundle\StateHandler\SetUpInterface;
 use Tienvx\Bundle\PactProviderBundle\StateHandler\TearDownInterface;
 
@@ -15,7 +16,7 @@ class StateHandlerManager implements StateHandlerManagerInterface
     {
     }
 
-    public function handle(string $state, string $action, array $params): void
+    public function handle(string $state, string $action, array $params): ?StateValues
     {
         if (!$this->locator->has($state)) {
             throw new NoHandlerForStateException(sprintf("No handler for state '%s'.", $state));
@@ -26,8 +27,8 @@ class StateHandlerManager implements StateHandlerManagerInterface
                 if (!$handler instanceof SetUpInterface) {
                     throw new LogicException(sprintf('Handler "%s" must implement "%s".', get_debug_type($handler), SetUpInterface::class));
                 }
-                $handler->setUp($params);
-                break;
+
+                return $handler->setUp($params);
 
             case Action::TEARDOWN:
                 if (!$handler instanceof TearDownInterface) {
@@ -39,5 +40,7 @@ class StateHandlerManager implements StateHandlerManagerInterface
             default:
                 break;
         }
+
+        return null;
     }
 }

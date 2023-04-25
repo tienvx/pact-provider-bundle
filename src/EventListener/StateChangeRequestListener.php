@@ -2,6 +2,7 @@
 
 namespace Tienvx\Bundle\PactProviderBundle\EventListener;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -27,9 +28,12 @@ class StateChangeRequestListener
         if ($request->getPathInfo() === $this->url && Request::METHOD_POST === $request->getMethod()) {
             [$state, $action, $params] = $this->getParameters($request);
 
-            $this->stateHandlerManager->handle($state, $action, $params);
-
-            $event->setResponse(new Response('', Response::HTTP_NO_CONTENT));
+            $values = $this->stateHandlerManager->handle($state, $action, $params);
+            if ($values) {
+                $event->setResponse(JsonResponse::fromJsonString($values));
+            } else {
+                $event->setResponse(new Response('', Response::HTTP_NO_CONTENT));
+            }
         }
     }
 
