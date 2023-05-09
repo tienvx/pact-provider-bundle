@@ -29,9 +29,10 @@ class TienvxPactProviderExtensionTest extends TestCase
         $this->loader->load([
             [
                 'state_change' => [
-                    'url' => '/path/to/state/change',
+                    'url' => '/path/to/pact-change-state',
                     'body' => false,
                 ],
+                'messages_url' => '/path/to/pact-messages',
             ],
         ], $this->container);
         $services = [
@@ -48,16 +49,17 @@ class TienvxPactProviderExtensionTest extends TestCase
                 'args' => function (array $args): bool {
                     return 3 === count($args) &&
                         StateHandlerManagerInterface::class == $args[0] &&
-                        '/path/to/state/change' === $args[1] &&
+                        '/path/to/pact-change-state' === $args[1] &&
                         false === $args[2];
                 },
             ],
             DispatchMessageRequestListener::class => [
                 'tag' => 'kernel.event_listener',
                 'args' => function (array $args): bool {
-                    return 2 === count($args) &&
+                    return 3 === count($args) &&
                         StateHandlerManagerInterface::class == $args[0] &&
-                        MessageDispatcherManagerInterface::class == $args[1];
+                        MessageDispatcherManagerInterface::class == $args[1] &&
+                        '/path/to/pact-messages' === $args[2];
                 },
             ],
         ];

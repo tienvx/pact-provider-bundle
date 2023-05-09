@@ -46,13 +46,10 @@ class StateChangeRequestListener
             $params = $body['params'] ?? [];
         } else {
             $params = $request->query->all();
+            $state = $params['state'] ?? null;
+            $action = $params['action'] ?? null;
             foreach (['state', 'action'] as $key) {
-                if (isset($params[$key])) {
-                    $$key = $params[$key];
-                    unset($params[$key]);
-                } else {
-                    $$key = null;
-                }
+                unset($params[$key]);
             }
         }
         if (!is_string($state)) {
