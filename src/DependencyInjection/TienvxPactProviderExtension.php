@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsMessageDispatcher;
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateHandler;
+use Tienvx\Bundle\PactProviderBundle\EventListener\DispatchMessageRequestListener;
 use Tienvx\Bundle\PactProviderBundle\EventListener\StateChangeRequestListener;
 
 class TienvxPactProviderExtension extends Extension
@@ -21,7 +22,7 @@ class TienvxPactProviderExtension extends Extension
         if (method_exists($container, 'registerAttributeForAutoconfiguration')) {
             $container->registerAttributeForAutoconfiguration(
                 AsStateHandler::class,
-                static function (ChildDefinition $definition, AsStateHandler $attribute, \ReflectionClass $reflector): void {
+                static function (ChildDefinition $definition, AsStateHandler $attribute, \Reflector $reflector): void {
                     $tagAttributes = get_object_vars($attribute);
                     $definition->addTag('pact_provider.state_handler', $tagAttributes);
                 }
@@ -29,7 +30,7 @@ class TienvxPactProviderExtension extends Extension
 
             $container->registerAttributeForAutoconfiguration(
                 AsMessageDispatcher::class,
-                static function (ChildDefinition $definition, AsMessageDispatcher $attribute, \ReflectionClass $reflector): void {
+                static function (ChildDefinition $definition, AsMessageDispatcher $attribute, \Reflector $reflector): void {
                     $tagAttributes = get_object_vars($attribute);
                     $definition->addTag('pact_provider.message_dispatcher', $tagAttributes);
                 }
@@ -42,5 +43,8 @@ class TienvxPactProviderExtension extends Extension
         $definition = $container->getDefinition(StateChangeRequestListener::class);
         $definition->replaceArgument(1, $config['state_change']['url']);
         $definition->replaceArgument(2, $config['state_change']['body']);
+
+        $definition = $container->getDefinition(DispatchMessageRequestListener::class);
+        $definition->replaceArgument(2, $config['messages_url']);
     }
 }

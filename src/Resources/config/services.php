@@ -37,6 +37,7 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 $service(StateHandlerManagerInterface::class),
                 $service(MessageDispatcherManagerInterface::class),
+                '',
             ])
             // Before Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest
             ->tag('kernel.event_listener', ['priority' => 33])

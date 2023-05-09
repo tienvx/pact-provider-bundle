@@ -12,11 +12,10 @@ use Tienvx\Bundle\PactProviderBundle\Service\StateHandlerManagerInterface;
 
 class DispatchMessageRequestListener
 {
-    public const DISPATCH_MESSAGE_URL = '/';
-
     public function __construct(
         private StateHandlerManagerInterface $stateHandlerManager,
-        private MessageDispatcherManagerInterface $messageDispatcherManager
+        private MessageDispatcherManagerInterface $messageDispatcherManager,
+        private string $url,
     ) {
     }
 
@@ -26,7 +25,7 @@ class DispatchMessageRequestListener
             return;
         }
         $request = $event->getRequest();
-        if (self::DISPATCH_MESSAGE_URL === $request->getPathInfo() && Request::METHOD_POST === $request->getMethod()) {
+        if ($this->url === $request->getPathInfo() && Request::METHOD_POST === $request->getMethod()) {
             [$description, $providerStates] = $this->getParameters($request);
 
             $this->handle($providerStates, Action::SETUP);
