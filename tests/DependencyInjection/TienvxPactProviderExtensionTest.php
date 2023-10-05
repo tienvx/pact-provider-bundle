@@ -5,8 +5,10 @@ namespace Tienvx\Bundle\MbtBundle\Tests\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Tienvx\Bundle\PactProviderBundle\Controller\MessagesController;
+use Tienvx\Bundle\PactProviderBundle\Controller\StateChangeController;
 use Tienvx\Bundle\PactProviderBundle\DependencyInjection\TienvxPactProviderExtension;
-use Tienvx\Bundle\PactProviderBundle\EventListener\DispatchMessageRequestListener;
+use Tienvx\Bundle\PactProviderBundle\EventListener\MessagesRequestListener;
 use Tienvx\Bundle\PactProviderBundle\EventListener\StateChangeRequestListener;
 use Tienvx\Bundle\PactProviderBundle\Service\MessageDispatcherManager;
 use Tienvx\Bundle\PactProviderBundle\Service\MessageDispatcherManagerInterface;
@@ -44,22 +46,30 @@ class TienvxPactProviderExtensionTest extends TestCase
                 'alias' => MessageDispatcherManagerInterface::class,
                 'args' => fn (array $args) => 1 === count($args) && $args[0] instanceof ServiceLocatorArgument,
             ],
+            MessagesController::class => [
+                'args' => fn (array $args) => 2 === count($args)
+                    && StateHandlerManagerInterface::class == $args[0]
+                    && MessageDispatcherManagerInterface::class == $args[1],
+            ],
+            StateChangeController::class => [
+                'args' => fn (array $args) => 2 === count($args)
+                    && StateHandlerManagerInterface::class == $args[0]
+                    && false == $args[1],
+            ],
             StateChangeRequestListener::class => [
                 'tag' => 'kernel.event_listener',
                 'args' => function (array $args): bool {
-                    return 3 === count($args) &&
-                        StateHandlerManagerInterface::class == $args[0] &&
-                        '/path/to/pact-change-state' === $args[1] &&
-                        false === $args[2];
+                    return 2 === count($args)
+                        && StateChangeController::class == $args[0]
+                        && '/path/to/pact-change-state' === $args[1];
                 },
             ],
-            DispatchMessageRequestListener::class => [
+            MessagesRequestListener::class => [
                 'tag' => 'kernel.event_listener',
                 'args' => function (array $args): bool {
-                    return 3 === count($args) &&
-                        StateHandlerManagerInterface::class == $args[0] &&
-                        MessageDispatcherManagerInterface::class == $args[1] &&
-                        '/path/to/pact-messages' === $args[2];
+                    return 2 === count($args)
+                        && MessagesController::class == $args[0]
+                        && '/path/to/pact-messages' === $args[1];
                 },
             ],
         ];
