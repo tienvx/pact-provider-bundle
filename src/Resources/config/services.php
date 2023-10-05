@@ -30,13 +30,13 @@ return static function (ContainerConfigurator $container): void {
         ->set(MessagesController::class)
             ->args([
                 $service(StateHandlerManagerInterface::class),
-                true,
+                $service(MessageDispatcherManagerInterface::class),
             ])
 
         ->set(StateChangeController::class)
             ->args([
                 $service(StateHandlerManagerInterface::class),
-                $service(MessageDispatcherManagerInterface::class),
+                true,
             ])
 
         ->set(StateChangeRequestListener::class)
