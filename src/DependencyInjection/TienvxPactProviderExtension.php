@@ -9,7 +9,8 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsMessageDispatcher;
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateHandler;
-use Tienvx\Bundle\PactProviderBundle\EventListener\DispatchMessageRequestListener;
+use Tienvx\Bundle\PactProviderBundle\Controller\StateChangeController;
+use Tienvx\Bundle\PactProviderBundle\EventListener\MessagesRequestListener;
 use Tienvx\Bundle\PactProviderBundle\EventListener\StateChangeRequestListener;
 
 class TienvxPactProviderExtension extends Extension
@@ -40,11 +41,13 @@ class TienvxPactProviderExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $definition = $container->getDefinition(StateChangeController::class);
+        $definition->replaceArgument(1, $config['state_change']['body']);
+
         $definition = $container->getDefinition(StateChangeRequestListener::class);
         $definition->replaceArgument(1, $config['state_change']['url']);
-        $definition->replaceArgument(2, $config['state_change']['body']);
 
-        $definition = $container->getDefinition(DispatchMessageRequestListener::class);
-        $definition->replaceArgument(2, $config['messages_url']);
+        $definition = $container->getDefinition(MessagesRequestListener::class);
+        $definition->replaceArgument(1, $config['messages_url']);
     }
 }

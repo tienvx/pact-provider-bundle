@@ -2,7 +2,9 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Tienvx\Bundle\PactProviderBundle\EventListener\DispatchMessageRequestListener;
+use Tienvx\Bundle\PactProviderBundle\Controller\MessagesController;
+use Tienvx\Bundle\PactProviderBundle\Controller\StateChangeController;
+use Tienvx\Bundle\PactProviderBundle\EventListener\MessagesRequestListener;
 use Tienvx\Bundle\PactProviderBundle\EventListener\StateChangeRequestListener;
 use Tienvx\Bundle\PactProviderBundle\Service\MessageDispatcherManager;
 use Tienvx\Bundle\PactProviderBundle\Service\MessageDispatcherManagerInterface;
@@ -25,18 +27,28 @@ return static function (ContainerConfigurator $container): void {
             ])
             ->alias(MessageDispatcherManagerInterface::class, MessageDispatcherManager::class)
 
-        ->set(StateChangeRequestListener::class)
+        ->set(MessagesController::class)
             ->args([
                 $service(StateHandlerManagerInterface::class),
-                '',
                 true,
             ])
-            // Before Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest
-            ->tag('kernel.event_listener', ['priority' => 33])
-        ->set(DispatchMessageRequestListener::class)
+
+        ->set(StateChangeController::class)
             ->args([
                 $service(StateHandlerManagerInterface::class),
                 $service(MessageDispatcherManagerInterface::class),
+            ])
+
+        ->set(StateChangeRequestListener::class)
+            ->args([
+                $service(StateChangeController::class),
+                '',
+            ])
+            // Before Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest
+            ->tag('kernel.event_listener', ['priority' => 33])
+        ->set(MessagesRequestListener::class)
+            ->args([
+                $service(MessagesController::class),
                 '',
             ])
             // Before Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest
