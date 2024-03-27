@@ -9,7 +9,9 @@
         "symfony/config": "^5.4|^6.4|7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0"
+        "phpunit/phpunit": "^10.0",
+        "symfony/framework-bundle": "^5.4|^6.4|7.0",
+        "symfony/test-pack": "^1.0"
     },
     "license": "MIT",
     "autoload": {
@@ -19,6 +21,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Tienvx\\Bundle\\PactProviderBundle\\Tests\\Application\\TestApplication\\": "tests/Application/TestApplication/src/",
             "Tienvx\\Bundle\\PactProviderBundle\\Tests\\": "tests/"
         }
     },
