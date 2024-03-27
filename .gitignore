@@ -3,6 +3,6 @@
 /.vscode/
 /vendor/
 /composer.lock
-/.phpunit.result.cache
+/.phpunit.cache
 /clover.xml
 /coveralls-upload.json
