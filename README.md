@@ -3,8 +3,8 @@
 This Symfony Bundle allow testing Symfony project with [Pact PHP][pact-php].
 It support:
 * Verify sending messages
-* Set up fixture
-* Tear down fixture
+* Set up provider state
+* Tear down provider state
 
 ## Installation
 
