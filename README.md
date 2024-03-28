@@ -74,6 +74,6 @@ class UserDispatcher implements DispatcherInterface
 [version-image]: http://img.shields.io/packagist/v/tienvx/pact-provider-bundle.svg?style=flat
 
 [php-version-url]: https://packagist.org/packages/tienvx/pact-provider-bundle
-[php-version-image]: http://img.shields.io/badge/php-8.0.0+-ff69b4.svg
+[php-version-image]: http://img.shields.io/badge/php-8.1.0+-ff69b4.svg
 
 [pact-php]: https://github.com/pact-foundation/pact-php
