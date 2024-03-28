@@ -53,21 +53,25 @@ class StateChangeController implements ControllerInterface
         return new ProviderState($state, $params);
     }
 
-    private function getAction(Request $request): string
+    private function getAction(Request $request): Action
     {
         if ($this->body) {
             $action = $request->toArray()['action'] ?? null;
         } else {
             $action = $request->query->all()['action'] ?? null;
         }
-        if (!is_string($action) || !in_array($action, Action::all())) {
-            throw new BadRequestException("'action' is missing or invalid in state change request.");
+        if (!is_string($action)) {
+            throw new BadRequestException("'action' is missing in state change request.");
+        }
+        $action = Action::tryFrom($action);
+        if (!$action) {
+            throw new BadRequestException("'action' is invalid in state change request.");
         }
 
         return $action;
     }
 
-    private function handleProviderState(ProviderState $providerState, string $action): ?StateValues
+    private function handleProviderState(ProviderState $providerState, Action $action): ?StateValues
     {
         return $this->stateHandlerManager->handle($providerState->state, $action, $providerState->params);
     }

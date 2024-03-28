@@ -51,9 +51,7 @@ class StateChangeControllerTest extends WebTestCase
         $this->assertStringContainsString("'params' is invalid in state change request.", $client->getResponse()->getContent());
     }
 
-    #[TestWith([[]])]
-    #[TestWith([['action' => 'clean']])]
-    public function testMissingOrInvalidProviderStateActionInBody(array $value): void
+    public function testMissingProviderStateActionInBody(): void
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state', [], [], [], json_encode([
@@ -61,15 +59,28 @@ class StateChangeControllerTest extends WebTestCase
             'params' => [
                 'key' => 'value',
             ],
-            ...$value,
         ]));
         $this->assertResponseStatusCodeSame(400);
-        $this->assertStringContainsString("'action' is missing or invalid in state change request.", $client->getResponse()->getContent());
+        $this->assertStringContainsString("'action' is missing in state change request.", $client->getResponse()->getContent());
+    }
+
+    public function testInvalidProviderStateActionInBody(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/test-pact-change-state', [], [], [], json_encode([
+            'state' => 'required state',
+            'params' => [
+                'key' => 'value',
+            ],
+            'action' => 'clean',
+        ]));
+        $this->assertResponseStatusCodeSame(400);
+        $this->assertStringContainsString("'action' is invalid in state change request.", $client->getResponse()->getContent());
     }
 
     #[TestWith([Action::SETUP])]
     #[TestWith([Action::TEARDOWN])]
-    public function testNoStateValuesWithBody(string $action): void
+    public function testNoStateValuesWithBody(Action $action): void
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state', [], [], [], json_encode([
@@ -108,38 +119,48 @@ class StateChangeControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state?'.http_build_query([
             'key' => 'value',
-            'action' => Action::SETUP,
+            'action' => Action::SETUP->value,
             ...$value,
         ]));
         $this->assertResponseStatusCodeSame(400);
         $this->assertStringContainsString("'state' is missing or invalid in state change request.", $client->getResponse()->getContent());
     }
 
-    #[TestWith([[]])]
-    #[TestWith([['action' => 'clean']])]
-    public function testMissingOrInvalidProviderStateActionInQuery(array $value): void
+    public function testMissingProviderStateActionInQuery(): void
     {
         $_ENV['STATE_CHANGE_BODY'] = 'false';
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state?'.http_build_query([
             'state' => 'required state',
             'key' => 'value',
-            ...$value,
         ]));
         $this->assertResponseStatusCodeSame(400);
-        $this->assertStringContainsString("'action' is missing or invalid in state change request.", $client->getResponse()->getContent());
+        $this->assertStringContainsString("'action' is missing in state change request.", $client->getResponse()->getContent());
+    }
+
+    public function testInvalidProviderStateActionInQuery(): void
+    {
+        $_ENV['STATE_CHANGE_BODY'] = 'false';
+        $client = static::createClient();
+        $client->request('POST', '/test-pact-change-state?'.http_build_query([
+            'state' => 'required state',
+            'key' => 'value',
+            'action' => 'clean',
+        ]));
+        $this->assertResponseStatusCodeSame(400);
+        $this->assertStringContainsString("'action' is invalid in state change request.", $client->getResponse()->getContent());
     }
 
     #[TestWith([Action::SETUP])]
     #[TestWith([Action::TEARDOWN])]
-    public function testNoStateValuesWithoutBody(string $action): void
+    public function testNoStateValuesWithoutBody(Action $action): void
     {
         $_ENV['STATE_CHANGE_BODY'] = 'false';
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state?'.http_build_query([
             'state' => 'no values',
             'key' => 'value',
-            'action' => $action,
+            'action' => $action->value,
         ]));
         $this->assertResponseStatusCodeSame(204);
         $this->assertEmpty($client->getResponse()->getContent());
@@ -152,7 +173,7 @@ class StateChangeControllerTest extends WebTestCase
         $client->request('POST', '/test-pact-change-state?'.http_build_query([
             'state' => 'required state',
             'key' => 'value',
-            'action' => Action::SETUP,
+            'action' => Action::SETUP->value,
         ]));
         $this->assertResponseStatusCodeSame(200);
         $this->assertResponseHeaderSame('Content-Type', 'application/json');
