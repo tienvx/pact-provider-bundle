@@ -49,7 +49,7 @@ class MessagesController implements ControllerInterface
         return array_map(function (array $providerState): ProviderState {
             $name = $providerState['name'] ?? null;
             if (!is_string($name)) {
-                throw new BadRequestException("Missing 'name' for provider state.");
+                throw new BadRequestException("Invalid or missing 'name' for provider state.");
             }
             $params = $providerState['params'] ?? [];
             if (!is_array($params)) {
