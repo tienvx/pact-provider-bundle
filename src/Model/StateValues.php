@@ -5,7 +5,7 @@ namespace Tienvx\Bundle\PactProviderBundle\Model;
 class StateValues
 {
     public function __construct(
-        public /* readonly */ array $values
+        public readonly array $values
     ) {
     }
 
