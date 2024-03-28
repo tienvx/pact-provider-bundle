@@ -47,7 +47,7 @@ class StateChangeController implements ControllerInterface
             throw new BadRequestException("'state' is missing or invalid in state change request.");
         }
         if (!is_array($params)) {
-            throw new BadRequestException("'params' is missing or invalid in state change request.");
+            throw new BadRequestException("'params' is invalid in state change request.");
         }
 
         return new ProviderState($state, $params);
