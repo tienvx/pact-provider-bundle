@@ -31,7 +31,7 @@ class StateHandlerManagerTest extends TestCase
     #[TestWith([Action::TEARDOWN])]
     public function testNoHandler(Action $action): void
     {
-        $state = 'no action';
+        $state = 'no handler';
         $this->locator
             ->expects($this->once())
             ->method('has')
