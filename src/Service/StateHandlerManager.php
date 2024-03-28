@@ -16,7 +16,7 @@ class StateHandlerManager implements StateHandlerManagerInterface
     {
     }
 
-    public function handle(string $state, string $action, array $params): ?StateValues
+    public function handle(string $state, Action $action, array $params): ?StateValues
     {
         if (!$this->locator->has($state)) {
             throw new NoHandlerForStateException(sprintf("No handler for state '%s'.", $state));

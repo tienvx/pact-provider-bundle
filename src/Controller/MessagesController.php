@@ -73,7 +73,7 @@ class MessagesController implements ControllerInterface
     /**
      * @param ProviderState[] $providerStates
      */
-    private function handleProviderStates(array $providerStates, string $action): void
+    private function handleProviderStates(array $providerStates, Action $action): void
     {
         foreach ($providerStates as $providerState) {
             $this->stateHandlerManager->handle($providerState->state, $action, $providerState->params);

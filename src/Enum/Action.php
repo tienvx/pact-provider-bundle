@@ -2,13 +2,8 @@
 
 namespace Tienvx\Bundle\PactProviderBundle\Enum;
 
-class Action
+enum Action: string
 {
-    public const SETUP = 'setup';
-    public const TEARDOWN = 'teardown';
-
-    public static function all(): array
-    {
-        return [self::SETUP, self::TEARDOWN];
-    }
+    case SETUP = 'setup';
+    case TEARDOWN = 'teardown';
 }
