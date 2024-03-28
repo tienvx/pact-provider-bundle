@@ -37,16 +37,6 @@ class UserHandler implements SetUpInterface, TearDownInterface
 }
 ```
 
-For Symfony 4.4 only:
-
-```yaml
-# config/services.yaml
-services:
-    App\StateHandler\UserHandler:
-        tags:
-            - { name: 'pact_provider.state_handler', state: 'A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists' }
-```
-
 ### Register Message Dispatcher
 
 ```php
@@ -64,16 +54,6 @@ class UserDispatcher implements DispatcherInterface
     {
     }
 }
-```
-
-For Symfony 4.4 only:
-
-```yaml
-# config/services.yaml
-services:
-    App\MessageDispatcher\UserDispatcher:
-        tags:
-            - { name: 'pact_provider.message_dispatcher', description: 'User created message' }
 ```
 
 ## License
