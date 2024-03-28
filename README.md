@@ -21,14 +21,18 @@ composer require tienvx/pact-provider-bundle
 namespace App\StateHandler;
 
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateHandler;
+use Tienvx\Bundle\PactProviderBundle\Model\StateValues;
 use Tienvx\Bundle\PactProviderBundle\StateHandler\SetUpInterface;
 use Tienvx\Bundle\PactProviderBundle\StateHandler\TearDownInterface;
 
 #[AsStateHandler(state: 'A user with id dcd79453-7346-4423-ae6e-127c60d8dd20 exists')]
 class UserHandler implements SetUpInterface, TearDownInterface
 {
-    public function setUp(array $params): void
+    public function setUp(array $params): ?StateValues
     {
+        return new StateValues([
+            'id' => 123,
+        ]);
     }
 
     public function tearDown(array $params): void
