@@ -24,4 +24,4 @@ List of tasks to outline what needs to be done
 ### Completed ✓
 - [x] Update PHP to 8.1
 - [x] Update Symfony to 5.4
-- [x] Update PHPUnit to 10.0
+- [x] Update PHPUnit to 10.1
