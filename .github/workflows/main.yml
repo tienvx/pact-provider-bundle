@@ -15,7 +15,6 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        tools: phpstan, php-cs-fixer:3
         coverage: pcov
 
     - name: Checkout
@@ -27,12 +26,14 @@ jobs:
         dependency-versions: ${{ matrix.dependency-versions }}
 
     - name: Run PHP CS Fixer
-      run: php-cs-fixer fix --diff --dry-run
-      env:
-        PHP_CS_FIXER_IGNORE_ENV: 1
+      uses: docker://oskarstark/php-cs-fixer-ga
+      with:
+        args: --diff --dry-run
 
     - name: Run PHPStan
-      run: phpstan
+      uses: docker://oskarstark/phpstan-ga
+      env:
+        REQUIRE_DEV: true
 
     - name: Test & Generate Code Coverage
       run: ./vendor/bin/phpunit
