@@ -5,7 +5,7 @@
     <ini name="display_errors" value="1"/>
     <ini name="error_reporting" value="-1"/>
     <server name="SHELL_VERBOSITY" value="-1"/>
-    <server name="KERNEL_CLASS" value="Tienvx\Bundle\PactProviderBundle\Tests\Application\TestApplication\Kernel"/>
+    <server name="KERNEL_CLASS" value="Tienvx\Bundle\PactProviderBundle\Tests\TestApplication\Kernel"/>
   </php>
   <testsuites>
     <testsuite name="tests">

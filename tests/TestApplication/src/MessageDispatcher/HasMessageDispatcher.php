@@ -1,6 +1,6 @@
 <?php
 
-namespace Tienvx\Bundle\PactProviderBundle\Tests\Application\TestApplication\MessageDispatcher;
+namespace Tienvx\Bundle\PactProviderBundle\Tests\TestApplication\MessageDispatcher;
 
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsMessageDispatcher;
 use Tienvx\Bundle\PactProviderBundle\MessageDispatcher\DispatcherInterface;

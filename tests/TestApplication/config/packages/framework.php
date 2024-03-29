@@ -1,6 +1,6 @@
 <?php
 
-use Tienvx\Bundle\PactProviderBundle\Tests\Application\TestApplication\Kernel;
+use Tienvx\Bundle\PactProviderBundle\Tests\TestApplication\Kernel;
 
 $configuration = [
     'http_method_override' => false,

@@ -11,6 +11,6 @@ return static function (ContainerConfigurator $container) {
             ->autoconfigure()
     ;
 
-    $services->load('Tienvx\\Bundle\\PactProviderBundle\\Tests\\Application\\TestApplication\\', '../src/*')
+    $services->load('Tienvx\\Bundle\\PactProviderBundle\\Tests\\TestApplication\\', '../src/*')
         ->exclude('../{Entity,Tests,Kernel.php}');
 };

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tienvx\Bundle\PactProviderBundle\Tests\Application\TestApplication\StateHandler;
+namespace Tienvx\Bundle\PactProviderBundle\Tests\TestApplication\StateHandler;
 
 use Tienvx\Bundle\PactProviderBundle\Attribute\AsStateHandler;
 use Tienvx\Bundle\PactProviderBundle\Model\StateValues;
