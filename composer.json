@@ -21,7 +21,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tienvx\\Bundle\\PactProviderBundle\\Tests\\Application\\TestApplication\\": "tests/Application/TestApplication/src/",
+            "Tienvx\\Bundle\\PactProviderBundle\\Tests\\TestApplication\\": "tests/TestApplication/src/",
             "Tienvx\\Bundle\\PactProviderBundle\\Tests\\": "tests/"
         }
     },

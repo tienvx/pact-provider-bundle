@@ -1,6 +1,6 @@
 <?php
 
-namespace Tienvx\Bundle\PactProviderBundle\Tests\Application\TestApplication;
+namespace Tienvx\Bundle\PactProviderBundle\Tests\TestApplication;
 
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
