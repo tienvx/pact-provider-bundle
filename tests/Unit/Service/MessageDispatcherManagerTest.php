@@ -27,7 +27,7 @@ class MessageDispatcherManagerTest extends TestCase
 
     public function testNoHandler(): void
     {
-        $description = 'no handler';
+        $description = 'no dispatcher';
         $this->locator
             ->expects($this->once())
             ->method('has')
