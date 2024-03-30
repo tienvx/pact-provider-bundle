@@ -42,8 +42,8 @@ class MessagesController implements ControllerInterface
     private function getProviderStates(Request $request): array
     {
         $providerStates = $request->toArray()['providerStates'] ?? [];
-        if (!is_array($providerStates) || empty($providerStates)) {
-            throw new BadRequestException("'providerStates' is missing or invalid in messages request.");
+        if (!is_array($providerStates)) {
+            throw new BadRequestException("'providerStates' is invalid in messages request.");
         }
 
         return array_map(function (array $providerState): ProviderState {
