@@ -53,7 +53,7 @@ class MessageDispatcherManagerTest extends TestCase
             ->with($description)
             ->willReturn($handler);
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage(sprintf('Handler "Closure" must implement "%s".', DispatcherInterface::class));
+        $this->expectExceptionMessage(sprintf('Dispatcher "Closure" must implement "%s".', DispatcherInterface::class));
         $this->messageDispatcherManager->dispatch($description);
     }
 
