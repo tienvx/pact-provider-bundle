@@ -2,7 +2,6 @@
 
 namespace Tienvx\Bundle\PactProviderBundle\Tests\Application\Controller;
 
-use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MessagesControllerTest extends WebTestCase
@@ -29,17 +28,28 @@ class MessagesControllerTest extends WebTestCase
         $this->assertStringContainsString('Request body is empty.', $client->getResponse()->getContent());
     }
 
-    #[TestWith([null])]
-    #[TestWith([[]])]
-    public function testMissingOrInvalidProviderStates(mixed $value): void
+    public function testInvalidProviderStates(): void
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-messages', [], [], [], json_encode([
             'description' => 'has message',
-            'providerStates' => $value,
+            'providerStates' => 123,
         ]));
         $this->assertResponseStatusCodeSame(400);
-        $this->assertStringContainsString("'providerStates' is missing or invalid in messages request.", $client->getResponse()->getContent());
+        $this->assertStringContainsString("'providerStates' is invalid in messages request.", $client->getResponse()->getContent());
+    }
+
+    public function testEmptyProviderStates(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/test-pact-messages', [], [], [], json_encode([
+            'description' => 'has message',
+            'providerStates' => [],
+        ]));
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertResponseHeaderSame('Content-Type', 'text/plain; charset=UTF-8');
+        $this->assertResponseHeaderSame('Pact-Message-Metadata', 'eyJrZXkiOiJ2YWx1ZSIsImNvbnRlbnRUeXBlIjoidGV4dFwvcGxhaW4ifQ==');
+        $this->assertStringContainsString('message content', $client->getResponse()->getContent());
     }
 
     public function testMissingProviderStateName(): void
