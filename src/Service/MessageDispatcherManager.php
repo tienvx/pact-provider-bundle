@@ -21,7 +21,7 @@ class MessageDispatcherManager implements MessageDispatcherManagerInterface
         }
         $dispatcher = $this->locator->get($description);
         if (!$dispatcher instanceof DispatcherInterface) {
-            throw new LogicException(sprintf('Handler "%s" must implement "%s".', get_debug_type($dispatcher), DispatcherInterface::class));
+            throw new LogicException(sprintf('Dispatcher "%s" must implement "%s".', get_debug_type($dispatcher), DispatcherInterface::class));
         }
 
         return $dispatcher->dispatch();
