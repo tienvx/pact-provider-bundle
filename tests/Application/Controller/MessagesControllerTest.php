@@ -93,6 +93,23 @@ class MessagesControllerTest extends WebTestCase
         $this->assertStringContainsString("Invalid 'params' for provider state 'required state'.", $client->getResponse()->getContent());
     }
 
+    public function testMissingDescription(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/test-pact-messages', [], [], [], json_encode([
+            'providerStates' => [
+                [
+                    'name' => 'required state',
+                    'params' => [
+                        'key' => 'value',
+                    ],
+                ],
+            ],
+        ]));
+        $this->assertResponseStatusCodeSame(400);
+        $this->assertStringContainsString("'description' is missing or invalid in messages request.", $client->getResponse()->getContent());
+    }
+
     public function testNoMessage(): void
     {
         $client = static::createClient();
