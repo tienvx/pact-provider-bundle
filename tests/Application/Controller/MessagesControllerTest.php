@@ -93,13 +93,13 @@ class MessagesControllerTest extends WebTestCase
             'description' => 'has message',
             'providerStates' => [
                 [
-                    'name' => 'required state',
+                    'name' => 'has values',
                     'params' => 123,
                 ],
             ],
         ]));
         $this->assertResponseStatusCodeSame(400);
-        $this->assertStringContainsString("Invalid 'params' for provider state 'required state'.", $client->getResponse()->getContent());
+        $this->assertStringContainsString("Invalid 'params' for provider state 'has values'.", $client->getResponse()->getContent());
     }
 
     public function testMissingDescription(): void
@@ -108,7 +108,7 @@ class MessagesControllerTest extends WebTestCase
         $client->request('POST', '/test-pact-messages', [], [], [], json_encode([
             'providerStates' => [
                 [
-                    'name' => 'required state',
+                    'name' => 'has values',
                     'params' => [
                         'key' => 'value',
                     ],
@@ -126,7 +126,7 @@ class MessagesControllerTest extends WebTestCase
             'description' => 'no message',
             'providerStates' => [
                 [
-                    'name' => 'required state',
+                    'name' => 'has values',
                     'params' => [
                         'key' => 'value',
                     ],
@@ -145,7 +145,7 @@ class MessagesControllerTest extends WebTestCase
             'description' => 'has message',
             'providerStates' => [
                 [
-                    'name' => 'required state',
+                    'name' => 'has values',
                     'params' => [
                         'key' => 'value',
                     ],
@@ -155,6 +155,6 @@ class MessagesControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(200);
         $this->assertResponseHeaderSame('Content-Type', 'text/plain; charset=UTF-8');
         $this->assertResponseHeaderSame('Pact-Message-Metadata', 'eyJrZXkiOiJ2YWx1ZSIsImNvbnRlbnRUeXBlIjoidGV4dFwvcGxhaW4ifQ==');
-        $this->assertStringContainsString('message content', $client->getResponse()->getContent());
+        $this->assertSame('message content', $client->getResponse()->getContent());
     }
 }

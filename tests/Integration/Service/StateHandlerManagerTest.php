@@ -13,8 +13,8 @@ class StateHandlerManagerTest extends KernelTestCase
 {
     #[TestWith(['no values', Action::SETUP, null])]
     #[TestWith(['no values', Action::TEARDOWN, null])]
-    #[TestWith(['required state', Action::SETUP, new StateValues(['id' => 123])])]
-    #[TestWith(['required state', Action::TEARDOWN, null])]
+    #[TestWith(['has values', Action::SETUP, new StateValues(['id' => 123])])]
+    #[TestWith(['has values', Action::TEARDOWN, null])]
     public function testHandle(string $state, Action $action, ?StateValues $stateValues): void
     {
         self::bootKernel();

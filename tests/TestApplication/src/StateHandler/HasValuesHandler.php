@@ -7,8 +7,8 @@ use Tienvx\Bundle\PactProviderBundle\Model\StateValues;
 use Tienvx\Bundle\PactProviderBundle\StateHandler\SetUpInterface;
 use Tienvx\Bundle\PactProviderBundle\StateHandler\TearDownInterface;
 
-#[AsStateHandler(state: 'required state')]
-class RequiredStateHandler implements SetUpInterface, TearDownInterface
+#[AsStateHandler(state: 'has values')]
+class HasValuesHandler implements SetUpInterface, TearDownInterface
 {
     public function setUp(array $params): ?StateValues
     {
