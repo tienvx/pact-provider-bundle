@@ -45,6 +45,9 @@ class MessagesController implements ControllerInterface
         if (!is_array($providerStates)) {
             throw new BadRequestException("'providerStates' is invalid in messages request.");
         }
+        if (empty($providerStates)) {
+            throw new BadRequestException("'providerStates' should not be empty in messages request.");
+        }
 
         return array_map(function (array $providerState): ProviderState {
             $name = $providerState['name'] ?? null;
