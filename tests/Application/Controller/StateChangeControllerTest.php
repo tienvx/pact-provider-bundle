@@ -50,7 +50,7 @@ class StateChangeControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state', [], [], [], json_encode([
-            'state' => 'required state',
+            'state' => 'has values',
             'params' => 123,
             'action' => Action::SETUP,
         ]));
@@ -62,7 +62,7 @@ class StateChangeControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state', [], [], [], json_encode([
-            'state' => 'required state',
+            'state' => 'has values',
             'params' => [
                 'key' => 'value',
             ],
@@ -75,7 +75,7 @@ class StateChangeControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state', [], [], [], json_encode([
-            'state' => 'required state',
+            'state' => 'has values',
             'params' => [
                 'key' => 'value',
             ],
@@ -87,7 +87,7 @@ class StateChangeControllerTest extends WebTestCase
 
     #[TestWith([Action::SETUP])]
     #[TestWith([Action::TEARDOWN])]
-    public function testNoStateValuesWithBody(Action $action): void
+    public function testNoSValuesStateInBody(Action $action): void
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state', [], [], [], json_encode([
@@ -101,11 +101,11 @@ class StateChangeControllerTest extends WebTestCase
         $this->assertEmpty($client->getResponse()->getContent());
     }
 
-    public function testHasValuesWithBody(): void
+    public function testHasValuesStateInBody(): void
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state', [], [], [], json_encode([
-            'state' => 'required state',
+            'state' => 'has values',
             'params' => [
                 'key' => 'value',
             ],
@@ -119,7 +119,7 @@ class StateChangeControllerTest extends WebTestCase
     }
 
     #[TestWith([[]])]
-    #[TestWith([['state[]' => 'required state']])]
+    #[TestWith([['state[]' => 'has values']])]
     public function testMissingOrInvalidProviderStateNameInQuery(array $value): void
     {
         $_ENV['STATE_CHANGE_BODY'] = 'false';
@@ -138,7 +138,7 @@ class StateChangeControllerTest extends WebTestCase
         $_ENV['STATE_CHANGE_BODY'] = 'false';
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state?'.http_build_query([
-            'state' => 'required state',
+            'state' => 'has values',
             'key' => 'value',
         ]));
         $this->assertResponseStatusCodeSame(400);
@@ -150,7 +150,7 @@ class StateChangeControllerTest extends WebTestCase
         $_ENV['STATE_CHANGE_BODY'] = 'false';
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state?'.http_build_query([
-            'state' => 'required state',
+            'state' => 'has values',
             'key' => 'value',
             'action' => 'clean',
         ]));
@@ -160,7 +160,7 @@ class StateChangeControllerTest extends WebTestCase
 
     #[TestWith([Action::SETUP])]
     #[TestWith([Action::TEARDOWN])]
-    public function testNoStateValuesWithoutBody(Action $action): void
+    public function testNoValuesStateInQuery(Action $action): void
     {
         $_ENV['STATE_CHANGE_BODY'] = 'false';
         $client = static::createClient();
@@ -173,12 +173,12 @@ class StateChangeControllerTest extends WebTestCase
         $this->assertEmpty($client->getResponse()->getContent());
     }
 
-    public function testHasValuesWithoutBody(): void
+    public function testHasValuesStateInQuery(): void
     {
         $_ENV['STATE_CHANGE_BODY'] = 'false';
         $client = static::createClient();
         $client->request('POST', '/test-pact-change-state?'.http_build_query([
-            'state' => 'required state',
+            'state' => 'has values',
             'key' => 'value',
             'action' => Action::SETUP->value,
         ]));
