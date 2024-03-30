@@ -15,6 +15,13 @@ class StateChangeControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(404);
     }
 
+    public function testWrongMethod(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/test-pact-change-state');
+        $this->assertResponseStatusCodeSame(404);
+    }
+
     public function testRequestBodyIsEmpty(): void
     {
         $client = static::createClient();

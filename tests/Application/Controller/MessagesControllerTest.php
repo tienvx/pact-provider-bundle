@@ -14,6 +14,13 @@ class MessagesControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(404);
     }
 
+    public function testWrongMethod(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/test-pact-messages');
+        $this->assertResponseStatusCodeSame(404);
+    }
+
     public function testRequestBodyIsEmpty(): void
     {
         $client = static::createClient();
