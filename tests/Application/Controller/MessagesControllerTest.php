@@ -35,6 +35,7 @@ class MessagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-messages', [], [], [], json_encode([
+            'description' => 'has message',
             'providerStates' => $value,
         ]));
         $this->assertResponseStatusCodeSame(400);
@@ -45,6 +46,7 @@ class MessagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-messages', [], [], [], json_encode([
+            'description' => 'has message',
             'providerStates' => [
                 [
                     'params' => [
@@ -61,6 +63,7 @@ class MessagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-messages', [], [], [], json_encode([
+            'description' => 'has message',
             'providerStates' => [
                 [
                     'name' => 123,
@@ -78,6 +81,7 @@ class MessagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/test-pact-messages', [], [], [], json_encode([
+            'description' => 'has message',
             'providerStates' => [
                 [
                     'name' => 'required state',
