@@ -38,7 +38,7 @@ class MessageDispatcherManagerTest extends TestCase
         $this->messageDispatcherManager->dispatch($description);
     }
 
-    public function testSetupValidDispatcher(): void
+    public function testSetupInvalidDispatcher(): void
     {
         $description = 'invalid dispatcher';
         $handler = function () {};
