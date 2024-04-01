@@ -20,23 +20,21 @@ class TienvxPactProviderExtension extends Extension
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.php');
 
-        if (method_exists($container, 'registerAttributeForAutoconfiguration')) {
-            $container->registerAttributeForAutoconfiguration(
-                AsStateHandler::class,
-                static function (ChildDefinition $definition, AsStateHandler $attribute, \Reflector $reflector): void {
-                    $tagAttributes = get_object_vars($attribute);
-                    $definition->addTag('pact_provider.state_handler', $tagAttributes);
-                }
-            );
+        $container->registerAttributeForAutoconfiguration(
+            AsStateHandler::class,
+            static function (ChildDefinition $definition, AsStateHandler $attribute, \Reflector $reflector): void {
+                $tagAttributes = get_object_vars($attribute);
+                $definition->addTag('pact_provider.state_handler', $tagAttributes);
+            }
+        );
 
-            $container->registerAttributeForAutoconfiguration(
-                AsMessageDispatcher::class,
-                static function (ChildDefinition $definition, AsMessageDispatcher $attribute, \Reflector $reflector): void {
-                    $tagAttributes = get_object_vars($attribute);
-                    $definition->addTag('pact_provider.message_dispatcher', $tagAttributes);
-                }
-            );
-        }
+        $container->registerAttributeForAutoconfiguration(
+            AsMessageDispatcher::class,
+            static function (ChildDefinition $definition, AsMessageDispatcher $attribute, \Reflector $reflector): void {
+                $tagAttributes = get_object_vars($attribute);
+                $definition->addTag('pact_provider.message_dispatcher', $tagAttributes);
+            }
+        );
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
