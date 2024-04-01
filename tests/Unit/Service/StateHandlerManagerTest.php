@@ -42,7 +42,7 @@ class StateHandlerManagerTest extends TestCase
         $this->stateHandlerManager->handle($state, $action, $this->params);
     }
 
-    public function testSetupValidHandler(): void
+    public function testSetupInvalidHandler(): void
     {
         $state = 'setup invalid handler';
         $action = Action::SETUP;
@@ -62,7 +62,7 @@ class StateHandlerManagerTest extends TestCase
         $this->stateHandlerManager->handle($state, $action, $this->params);
     }
 
-    public function testTeardownValidHandler(): void
+    public function testTeardownInvalidHandler(): void
     {
         $state = 'teardown invalid handler';
         $action = Action::TEARDOWN;
