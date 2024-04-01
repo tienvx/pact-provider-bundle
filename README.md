@@ -54,7 +54,7 @@ use Tienvx\Bundle\PactProviderBundle\MessageDispatcher\DispatcherInterface;
 #[AsMessageDispatcher(description: 'User created message')]
 class UserDispatcher implements DispatcherInterface
 {
-    public function dispatch(): Message
+    public function dispatch(): ?Message
     {
     }
 }
